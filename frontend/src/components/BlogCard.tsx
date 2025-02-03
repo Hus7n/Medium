@@ -1,18 +1,23 @@
+import { Link } from "react-router-dom";
+
 interface BlogCardProps {
 authorName : string;
 title : string;
 content : string;
 publishedDate : string;
+id : number;
 }
 
 export const BlogCard = ({
     authorName,
     title,
+    id,
     content,
     publishedDate
 } : BlogCardProps) =>{
 
-    return <div className="p-4 border-b border-slate-200 pb-4">
+    return <Link to={`/blog/${id}`}>
+    <div className="p-4 border-b border-slate-200 pb-4 w-screen max-w-screen-md cursor-pointer">
 <div className="flex">
     
     <Avatar name = {authorName}/>
@@ -24,21 +29,22 @@ export const BlogCard = ({
    <div className="pl-2 font-thin text-slate-500 text-sm flex flex-col justify-center">
  .  {publishedDate}
    </div>
-</div>
+ </div>
 
-<div className=" text-xl font-semibold pt-2">
+ <div className=" text-xl font-semibold pt-2">
     {title}
-</div>
+ </div>
 
-<div className="text-md font-thin pt-4">
+ <div className="text-md font-thin pt-4">
     {content.slice(0,100) + "..."}
-</div>
+ </div>
 
-<div className="text-slate-500 text-sm font-thin">
-{/* if content less than 100 word = 1 minutes*/}
+ <div className="text-slate-500 text-sm font-thin">
+ {/* if content less than 100 word = 1 minutes*/}
     {`${Math.ceil(content.length / 100)} minute(s)`}
-</div>
+ </div>
     </div>
+</Link>
 }
 
  export function Avatar ({ name , size ="small"}: {name : string , size? : "small" | "big"}){

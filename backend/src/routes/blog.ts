@@ -3,6 +3,7 @@ import { withAccelerate } from '@prisma/extension-accelerate';
 import { Hono } from "hono";
 import { verify } from 'hono/jwt';
 import { createBlogInput, updateBlogInput } from '@hus7n/medium-common';
+import { string } from 'zod';
 
 export const blogRouter = new Hono<{
     Bindings:{
@@ -85,13 +86,13 @@ blogRouter.post('/', async (c) => {
   })
   
    //all blog title
-  //need to end pagination
+  //need to add pagination
   blogRouter.get('/bulk',  async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl : c.env.DATABASE_URL,
     }).$extends(withAccelerate())
 
-    const blog = await prisma.blog.findMany({
+    const blogs = await prisma.blog.findMany({
         select : {
             content : true ,
             title :true,
@@ -104,7 +105,7 @@ blogRouter.post('/', async (c) => {
         }
     });
     return c.json({
-        blog
+        blogs
     })
   })
 
@@ -120,6 +121,17 @@ blogRouter.post('/', async (c) => {
             where :{
                 id : Number(id)
             },
+            select:{
+                id:true,
+                title:true,
+                content:true,
+                author:{
+                    select:{
+                        name:true
+                    }
+                }
+
+            }
         })
         return c.json({
             blog
