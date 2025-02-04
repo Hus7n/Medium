@@ -12,6 +12,7 @@ export const Blog = () => {
             loading...
         </div>
     }
+    
     return <div>
         <FullBlog blog={blog}/>
     </div>
