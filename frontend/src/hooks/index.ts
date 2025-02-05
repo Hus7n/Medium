@@ -22,8 +22,8 @@ export const useBlog = ({id} : {id:string}) =>{
             }
         })
             
-        .then(respone => {
-            setBlog(respone.data.blogs);
+        .then(response => {
+            setBlog(response.data.blog);
             setLoading(false)
         } )
     },[id])

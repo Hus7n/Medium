@@ -14,7 +14,7 @@ export const Publish = () => {
         <div className ="max-w-screen-lg w-full">
 <input type="text" onChange={(e) =>{
     setTitle(e.target.value);
-}}  className=" w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Title"/>
+}}  className=" w-full mb-2 focus:outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg   block p-2.5 " placeholder="Title"/>
 <TextEditor onChange={(e) =>{
     setDescription(e.target.value)
 }}/>
@@ -44,7 +44,7 @@ return <div>
          
        <div className=" my-2 bg-white rounded-b-lg w-full">
            <label  className="sr-only">Publish post</label>
-           <textarea onChange={onChange} rows={8} className=" focus:outline-none block w-full px-0 text-sm text-gray-800 bg-white border-0" placeholder="Write an article..." required ></textarea>
+           <textarea onChange={onChange} rows={8} className=" focus:outline-none block w-full px-0 text-sm text-gray-800 bg-white border-0 " placeholder="Write an article..." required ></textarea>
        </div>
    </div>
   
