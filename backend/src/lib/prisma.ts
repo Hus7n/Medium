@@ -8,7 +8,7 @@ export const createPrismaClient = (databaseUrl: string) => {
 
   // Accelerate URLs require the extension; direct Postgres URLs do not.
   if (databaseUrl.startsWith("prisma://")) {
-    return client.$extends(withAccelerate());
+    return client.$extends(withAccelerate()) as unknown as PrismaClient;
   }
 
   return client;
