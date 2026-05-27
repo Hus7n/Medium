@@ -1,9 +1,7 @@
-import { Prisma, PrismaClient } from '@prisma/client/edge'
-import { withAccelerate } from '@prisma/extension-accelerate';
 import { Hono } from "hono";
 import { verify } from 'hono/jwt';
 import { createBlogInput, updateBlogInput } from '@hus7n/medium-common';
-import { string } from 'zod';
+import { createPrismaClient } from '../lib/prisma';
 
 export const blogRouter = new Hono<{
     Bindings:{
@@ -42,9 +40,7 @@ blogRouter.post('/', async (c) => {
         })
     }
     const authorId = c.get("userId");
-    const prisma = new PrismaClient({
-    datasourceUrl : c.env.DATABASE_URL,
-    }).$extends(withAccelerate());
+    const prisma = createPrismaClient(c.env.DATABASE_URL);
 
    const blog = await prisma.blog.create({
         data:{
@@ -68,9 +64,7 @@ blogRouter.post('/', async (c) => {
             message : "input not correct"
         })
     }
-    const prisma = new PrismaClient({
-    datasourceUrl : c.env.DATABASE_URL,
-    }).$extends(withAccelerate());
+    const prisma = createPrismaClient(c.env.DATABASE_URL);
 
    const blog = await prisma.blog.update({
         where:{
@@ -88,9 +82,7 @@ blogRouter.post('/', async (c) => {
    //all blog title
   //need to add pagination
   blogRouter.get('/bulk',  async (c) => {
-    const prisma = new PrismaClient({
-        datasourceUrl : c.env.DATABASE_URL,
-    }).$extends(withAccelerate())
+    const prisma = createPrismaClient(c.env.DATABASE_URL);
 
     const blogs = await prisma.blog.findMany({
         select : {
@@ -112,9 +104,7 @@ blogRouter.post('/', async (c) => {
   //ret complete blog
   blogRouter.get('/:id',  async (c) => {
     const id =  c.req.param("id");
-    const prisma = new PrismaClient({
-        datasourceUrl : c.env.DATABASE_URL,
-    }).$extends(withAccelerate())
+    const prisma = createPrismaClient(c.env.DATABASE_URL);
 
     try{
         const blog = await prisma.blog.findFirst({
