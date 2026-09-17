@@ -1,15 +1,10 @@
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
+import { neon } from "@neondatabase/serverless";
+import { PrismaNeonHTTP } from "@prisma/adapter-neon";
+import { PrismaClient } from "@prisma/client";
 
 export const createPrismaClient = (databaseUrl: string) => {
-  const client = new PrismaClient({
-    datasourceUrl: databaseUrl,
-  });
-
-  // Accelerate URLs require the extension; direct Postgres URLs do not.
-  if (databaseUrl.startsWith("prisma://")) {
-    return client.$extends(withAccelerate()) as unknown as PrismaClient;
-  }
-
-  return client;
+  // HTTP driver works on Cloudflare Workers (no TCP / WebSocket polyfills needed).
+  const sql = neon(databaseUrl);
+  const adapter = new PrismaNeonHTTP(sql);
+  return new PrismaClient({ adapter });
 };

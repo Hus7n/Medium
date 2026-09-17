@@ -1,5 +1,6 @@
 # prod
 dist/
+node_modules/
 
 # dev
 .yarn/
@@ -17,6 +18,8 @@ node_modules/
 
 # env
 .env
+.env.*
+!.env.example
 .env.production
 .dev.vars
 
@@ -31,3 +34,4 @@ lerna-debug.log*
 
 # misc
 .DS_Store
+.neon

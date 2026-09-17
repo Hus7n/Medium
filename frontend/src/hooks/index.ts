@@ -26,6 +26,9 @@ export const useBlog = ({id} : {id:string}) =>{
             setBlog(response.data.blog);
             setLoading(false)
         } )
+        .catch(() => {
+            setLoading(false)
+        })
     },[id])
     return {
         loading,
@@ -47,6 +50,9 @@ export const useBlogs = () => {
             setBlogs(respone.data.blogs);
             setLoading(false)
         } )
+        .catch(() => {
+            setLoading(false)
+        })
     },[])
     return {
         loading,
