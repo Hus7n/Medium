@@ -15,9 +15,9 @@ userRouter.post('/signup', async (c) => {
     //zod validation
     const {success} = signupInput.safeParse(body)
     if(!success){
-      c.status(411)
+      c.status(400)
       return c.json({
-        message : "Input is incorrect"
+        message : "Enter a valid email and a password of at least 6 characters"
       })
     } 
     const prisma = createPrismaClient(c.env.DATABASE_URL);
@@ -38,8 +38,14 @@ userRouter.post('/signup', async (c) => {
    // return c.text('Signed Up')
   }catch(e){
     console.log(e)
-    c.status(411);
-    return c.text("Invalid")
+    // P2002 = Prisma unique violation, 23505 = Postgres unique violation (driver adapter)
+    const code = (e as {code?: string})?.code;
+    if (code === "P2002" || code === "23505") {
+      c.status(409);
+      return c.json({ message : "An account with this email already exists. Try signing in instead." })
+    }
+    c.status(500);
+    return c.json({ message : "Could not create the account. Please try again." })
   }
   })
   
@@ -47,9 +53,9 @@ userRouter.post('/signup', async (c) => {
     const body = await c.req.json();
     const {success} = signinInput.safeParse(body);
     if(!success){
-      c.status(411)
+      c.status(400)
       return c.json({
-        message : "input is incorrect"
+        message : "Enter a valid email and a password of at least 6 characters"
       })
     }
     const prisma = createPrismaClient(c.env.DATABASE_URL);
@@ -63,8 +69,8 @@ userRouter.post('/signup', async (c) => {
       }
     })
     if(!user){
-      c.status(403);
-    return c.json({message :"Incorrect credentials"})
+      c.status(401);
+    return c.json({message :"Incorrect email or password"})
     }
     const jwt = await sign({
       id : user.id
@@ -73,7 +79,7 @@ userRouter.post('/signup', async (c) => {
     //return c.text('SignedIn')
   }catch(e){
     console.log(e)
-    c.status(411);
-    return c.text("Invalid")
+    c.status(500);
+    return c.json({ message : "Could not sign you in. Please try again." })
   }
   })

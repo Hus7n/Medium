@@ -18,9 +18,16 @@ export const Auth = ({type} : {type :"signup" |"signin"}) =>{
         const jwt = response.data;
         localStorage.setItem("token" , jwt);
         navigate ("/blogs");
-       // eslint-disable-next-line @typescript-eslint/no-unused-vars
        }catch(e){
-        alert("Invalid")
+        let message = "Something went wrong. Please try again.";
+        if(axios.isAxiosError(e)){
+            if(!e.response){
+                message = "Cannot reach the server. Please try again later.";
+            }else if(typeof e.response.data === "object" && e.response.data?.message){
+                message = e.response.data.message;
+            }
+        }
+        alert(message)
        }
     }
 
@@ -74,11 +81,11 @@ interface LabelledInput{
     type ? : string
 }
 
-function LabelledInput({label , placeholder , onChange} : LabelledInput){
+function LabelledInput({label , placeholder , onChange, type} : LabelledInput){
     return <div>
         <div>
             <label  className="block mb-2 text-sm pt-4 text-black font-semibold">{label}</label>
-            <input onChange={onChange} type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder={placeholder} required />
+            <input onChange={onChange} type={type || "text"} id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder={placeholder} required />
         </div>
     </div>
 }
